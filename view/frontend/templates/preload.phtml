@@ -1,11 +1,25 @@
+<?php
+
+$preload = true;
+
+if ($preload === false) {
+    return '';
+}
+?>
 <script>
     require([
-        'mage/mage',
-        'mage/apply/scripts',
-        'mage/apply/main',
+        'domReady',
         'jquery',
-        'underscore'
-    ], function(mage) {
-        mage.init();
+        'mage/apply/main',
+        'mage/apply/scripts',
+        'underscore',
+    ], function (domReady, $, mage) {
+        domReady(function () {
+            mage.apply();
+
+            $('body').on('contentUpdated', function () {
+                mage.apply();
+            });
+        });
     });
 </script>
