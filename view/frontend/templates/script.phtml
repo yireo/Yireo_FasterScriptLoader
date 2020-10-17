@@ -1,0 +1,59 @@
+<script>
+    function fsl(component, fn, $, elementId, config) {
+        function isFunction(fn) {
+            return fn && typeof fn === 'function';
+        }
+
+        var elements = [];
+        var element = document.getElementById(elementId);
+        if (element instanceof HTMLElement) {
+            elements.push(element);
+        } else if (elementId !== '*') {
+            $(elementId).each(function(index, $element) {
+                if ($element[0] instanceof HTMLElement) {
+                    elements.push($element[0]);
+                }
+            });
+        }
+
+        if (typeof fn === 'object') {
+            fn = fn[component].bind(fn);
+        }
+
+        if (isFunction(fn)) {
+            if (elements.length < 2) {
+                fn = fn.bind(null, config, element);
+                return fn.call();
+            }
+
+            console.log('Debug', component, elementId, elements, config);
+            elements.forEach(function(index, element) {
+                fn = fn.bind(null, config, element);
+                return fn.call();
+            })
+            return;
+        }
+
+        console.log('Unknown component: ', component);
+    }
+
+    function fsl2(component, fn, $, elementId, config) {
+        function isFunction(fn) {
+            return fn && typeof fn === 'function';
+        }
+
+        var element = document.getElementById(elementId);
+
+        if (typeof fn === 'object') {
+            fn = fn[component].bind(fn);
+        }
+
+        if (isFunction(fn)) {
+            fn = fn.bind(null, config, element);
+            return fn.call();
+        }
+
+        console.log('Unknown component: ', component);
+    }
+</script>
+

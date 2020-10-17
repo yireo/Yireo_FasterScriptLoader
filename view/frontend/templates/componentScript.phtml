@@ -1,0 +1,14 @@
+<?php declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$component = $block->getComponent();
+$elementId = str_replace("'", "\\'", $block->getElementId());
+$config = $block->getConfiguration();
+?>
+<script>
+    require(['<?= $block->getComponent() ?>', 'jquery'], function (fn, jQuery) {
+        fsl('<?= $component ?>', fn, jQuery, '<?= $elementId ?>', <?= $config ?>);
+    })
+</script>
