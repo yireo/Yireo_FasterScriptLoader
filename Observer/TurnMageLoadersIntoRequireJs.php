@@ -2,6 +2,7 @@
 
 namespace Yireo\FasterScriptLoader\Observer;
 
+use Magento\Framework\Escaper;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -32,22 +33,30 @@ class TurnMageLoadersIntoRequireJs implements ObserverInterface
     private $template;
 
     /**
+     * @var Escaper
+     */
+    private $escaper;
+
+    /**
      * TurnMageLoadersIntoRequireJs constructor.
      * @param SerializerInterface $serializer
      * @param TemplateFileResolver $templateFileResolver
      * @param TemplateEnginePool $templateEnginePool
      * @param Template $template
+     * @param Escaper $escaper
      */
     public function __construct(
         SerializerInterface $serializer,
         TemplateFileResolver $templateFileResolver,
         TemplateEnginePool $templateEnginePool,
-        Template $template
+        Template $template,
+        Escaper $escaper
     ) {
         $this->serializer = $serializer;
         $this->templateFileResolver = $templateFileResolver;
         $this->templateEnginePool = $templateEnginePool;
         $this->template = $template;
+        $this->escaper = $escaper;
     }
 
     /**
@@ -123,7 +132,11 @@ class TurnMageLoadersIntoRequireJs implements ObserverInterface
 
         $extension = pathinfo($templateFileName, PATHINFO_EXTENSION);
         $templateEngine = $this->templateEnginePool->get($extension);
-        $scriptHtml = $templateEngine->render($this->template, $templateFileName);
+        $scriptHtml = $templateEngine->render(
+            $this->template,
+            $templateFileName,
+            ['escaper' => $this->escaper]
+        );
         //$scriptHtml = str_replace("\n", ' ', $scriptHtml);
 
         return $scriptHtml;

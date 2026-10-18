@@ -1,14 +1,16 @@
 <?php declare(strict_types=1);
 
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
 /** @var Template $block */
+/** @var Escaper $escaper */
 $component = $block->getComponent();
-$elementId = str_replace("'", "\\'", $block->getElementId());
+$elementId = $block->getElementId();
 $config = $block->getConfiguration();
 ?>
 <script>
-    require(['<?= $block->getComponent() ?>', 'jquery'], function (fn, jQuery) {
-        fsl('<?= $component ?>', fn, jQuery, '<?= $elementId ?>', <?= $config ?>);
+    require(['<?= $escaper->escapeJs($component) ?>', 'jquery'], function (fn, jQuery) {
+        fsl('<?= $escaper->escapeJs($component) ?>', fn, jQuery, '<?= $escaper->escapeJs($elementId) ?>', <?= /* @noEscape */ $config ?>);
     })
 </script>
