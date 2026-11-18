@@ -1,5 +1,7 @@
 {
     "module_name": "Yireo_FasterScriptLoader",
     "composer_name": "yireo/magento2-faster-script-loader",
-    "sequence": []
+    "sequence": [],
+    "phpcs_severity": "9",
+    "phpstan_level": "5"
 }
