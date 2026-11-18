@@ -78,9 +78,9 @@ class TurnMageLoadersIntoRequireJs implements ObserverInterface
 
                     $elementId = $this->getElementId($matches[0][$matchIndex]);
                     $script .= $this->getScript($component, $configuration, $elementId);
-                    $replaceTag = trim($matches[1][$matchIndex]) . ' ' . trim(
-                            $matches[3][$matchIndex]
-                        ) . ' id="' . $elementId . '"';
+                    $replaceTag = trim($matches[1][$matchIndex], " \n\r\t\v\0") . ' '
+                        . trim($matches[3][$matchIndex], " \n\r\t\v\0")
+                        . ' id="' . $elementId . '"';
                     $html = str_replace($matches[0][$matchIndex], $replaceTag, $html);
                 }
             }
@@ -190,7 +190,7 @@ class TurnMageLoadersIntoRequireJs implements ObserverInterface
     private function getDataFromJson(string $json, string $debugValue): array
     {
         $json = str_replace("\n", ' ', $json);
-        $json = trim($json);
+        $json = trim($json, " \n\r\t\v\0");
         if (empty($json)) {
             return [];
         }
