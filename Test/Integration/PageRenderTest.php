@@ -2,6 +2,7 @@
 
 namespace Yireo\FasterScriptLoader\Test\Integration;
 
+use Magento\Framework\App\Response\Http as HttpResponse;
 use Magento\TestFramework\TestCase\AbstractController;
 
 /**
@@ -12,7 +13,9 @@ class PageRenderTest extends AbstractController
     public function testHomepageScriptsAreRenderedThroughLoader(): void
     {
         $this->dispatch('/');
-        $body = (string)$this->getResponse()->getBody();
+        $response = $this->getResponse();
+        $this->assertInstanceOf(HttpResponse::class, $response);
+        $body = (string)$response->getBody();
 
         $this->assertStringContainsString('function fsl(', $body);
         $this->assertStringContainsString('require([', $body);
