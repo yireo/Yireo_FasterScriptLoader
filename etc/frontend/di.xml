@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Result\Page">
+        <plugin name="Yireo_FasterScriptLoader::rewriteMageInitInPage"
+                type="Yireo\FasterScriptLoader\Plugin\RewriteMageInitInPage"
+                sortOrder="-100"/>
+    </type>
+
+    <type name="Yireo\FasterScriptLoader\Rewriter\ComponentFilter">
+        <arguments>
+            <argument name="skippedComponents" xsi:type="array">
+                <item name="gallery" xsi:type="string">mage/gallery/gallery</item>
+                <item name="validate_product" xsi:type="string">Magento_Catalog/js/validate-product</item>
+                <item name="swatch_renderer" xsi:type="string">Magento_Swatches/js/swatch-renderer</item>
+                <item name="swatches_add_to_cart" xsi:type="string">Magento_Swatches/js/catalog-add-to-cart</item>
+                <item name="catalog_add_to_cart" xsi:type="string">catalogAddToCart</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
