@@ -1,59 +1,42 @@
-<script>
-    function fsl(component, fn, $, elementId, config) {
-        function isFunction(fn) {
-            return fn && typeof fn === 'function';
-        }
+<?php declare(strict_types=1);
 
-        var elements = [];
-        var element = document.getElementById(elementId);
-        if (element instanceof HTMLElement) {
-            elements.push(element);
-        } else if (elementId !== '*') {
-            $(elementId).each(function(index, $element) {
-                if ($element[0] instanceof HTMLElement) {
-                    elements.push($element[0]);
-                }
-            });
-        }
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
 
-        if (typeof fn === 'object') {
-            fn = fn[component].bind(fn);
-        }
-
-        if (isFunction(fn)) {
-            if (elements.length < 2) {
-                fn = fn.bind(null, config, element);
-                return fn.call();
-            }
-
-            console.log('Debug', component, elementId, elements, config);
-            elements.forEach(function(index, element) {
-                fn = fn.bind(null, config, element);
-                return fn.call();
-            })
-            return;
-        }
-
-        console.log('Unknown component: ', component);
+/** @var Template $block */
+/** @var SecureHtmlRenderer $secureRenderer */
+?>
+<?php $scriptString = <<<'script'
+function fsl(component, fn, config, target, $) {
+    if (fn && typeof fn === 'object' && typeof fn[component] === 'function') {
+        fn = fn[component].bind(fn);
     }
 
-    function fsl2(component, fn, $, elementId, config) {
-        function isFunction(fn) {
-            return fn && typeof fn === 'function';
-        }
-
-        var element = document.getElementById(elementId);
-
-        if (typeof fn === 'object') {
-            fn = fn[component].bind(fn);
-        }
-
-        if (isFunction(fn)) {
-            fn = fn.bind(null, config, element);
-            return fn.call();
-        }
-
-        console.log('Unknown component: ', component);
+    if (typeof fn !== 'function') {
+        return;
     }
-</script>
 
+    if (target.id !== undefined) {
+        fn(config, document.getElementById(target.id));
+        return;
+    }
+
+    if (target.selector === '*') {
+        fn(config, false);
+        return;
+    }
+
+    var elements = [];
+    try {
+        elements = $.find(target.selector);
+    } catch (error) {
+        return;
+    }
+
+    elements.forEach(function (element) {
+        fn(config, element);
+    });
+}
+script;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
